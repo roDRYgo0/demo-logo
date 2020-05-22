@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .img {
+            width: 100%;
+            max-width: 406px;
+        }
+        .container-img {
+            width: 406px;
+            height: 406px;
+        }
+    </style>
+</head>
+<body>
+    <div class="flex justify-center items-center w-full h-screen bg-gray-200">
+        <canvas id="myCanvas" class="hidden" width="406" height="406" style="border:1px solid #000000; background-image: url('interior.png');">
+        </canvas>
+        <div class="container-img overflow-hidden relative">
+            <img src="interior.png" id="image" alt="" class="img transform scale-150 absolute">
+            <div class="w-full h-full z-10 relative ">
+                <div
+                    id="safe-area"
+                    class="absolute border-dashed w-12 h-12 border-black"
+                >
+
+                </div>
+            </div>
+        </div>
+        <form action="" class="flex flex-col ml-5">
+            <div class="flex">
+                <div>
+                    <div class="flex flex-col">
+                        <label for="">Offset X</label>
+                        <input id="offsetX" type="number" value="0">
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <label for="">Offset Y</label>
+                        <input id="offsetY" type="number" value="0">
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <div class="flex flex-col">
+                        <label for="">Width</label>
+                        <input id="width" type="number" value="0">
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <label for="">Height</label>
+                        <input id="height" type="number" value="0">
+                    </div>
+                </div>
+                <div class="ml-4">
+                    <div class="flex flex-row">
+                        <label for="white">white
+                            <input id="white" name="color" type="radio" value="white">
+                        </label>
+                        <label for="black" class="ml-4">black
+                            <input id="black" name="color" type="radio" value="white" checked>
+                        </label>
+                        <label for="red" class="ml-4">red
+                            <input id="red" name="color" type="radio" value="red" >
+                        </label>
+                    </div>
+                    <div class="flex flex-col mt-5">
+                        <label for="">Border width</label>
+                        <input id="borderWidth" type="number" value="0">
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="bg-red-300 mt-5" onclick="changeTo('interior')">Vista interior</button>
+            <button type="button" class="bg-blue-300 mt-5" onclick="changeTo('exterior')">Vista exterior</button>
+        </form>
+    </div>
+    <script>
+        var image = document.getElementById('image');
+        var changeTo = (side) => {
+            console.log(image)
+            image.src = `${side}.png`;
+        }
+        var safeArea = document.getElementById('safe-area');
+
+        var width = 404;
+        var height = 156;
+
+        var borderWidth = 2;
+        var color = 'black';
+
+        var offsetX = 0;
+        var offsetY = 0;
+
+        var reload = () => {
+            safeArea.style.borderWidth = `${borderWidth}px`;
+            safeArea.style.borderColor = `${color}`;
+            safeArea.style.width = `${width}px`;
+            safeArea.style.height = `${height}px`;
+            safeArea.style.left = `calc(50% - ${width / 2 }px + ${offsetX}px)`;
+            safeArea.style.top = `calc(50% - ${height / 2 }px + ${offsetY}px)`;
+        }
+
+        var that = this;
+        ['offsetX', 'offsetY', 'height', 'width', 'borderWidth'].forEach(id=>{
+            let el = document.getElementById(id);
+            el.value = that[id];
+            el.addEventListener('input', function () {
+                that[id] = el.value;
+              reload();
+            })
+        });
+
+        ['white', 'black', 'red'].forEach(id => {
+            let el = document.getElementById(id);
+            el.addEventListener('change', () => {
+                that['color'] = id;
+                reload();
+            })
+
+        })
+
+        reload();
+
+        var c = document.getElementById("myCanvas");
+        var ctx = c.getContext("2d");
+        ctx.moveTo(0, 0);
+        ctx.lineTo(406, 406);
+        ctx.stroke();
+    </script>
+</body>
+</html>
